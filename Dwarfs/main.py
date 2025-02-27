@@ -3,8 +3,7 @@ from modules.Views import menu
 #from item import Item
 #import menu
 
-chanceTitan = 200
-chanceIron = 40
+
 
 # Balin = Dwarf("Balin")
 # Dwalin = Dwarf("Dwalin")

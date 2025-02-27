@@ -1,4 +1,7 @@
 import random
+import time
+from colorama import Fore, Style
+from modules.Views import menu
 
 class Dwarf:
     def __init__(self, name):
@@ -10,15 +13,24 @@ class Dwarf:
         self.busy = 0
         self.remainingTurns = 0
 
-    def mining(self, titan, iron, time):
+    def mining(self, mimingTime):
+
+        global timeSlow, timeMedium, timeFast
 
         capInd = 0
         miningXP = 20
         sumRock = 0
         sumIron = 0
         sumTitan = 0
+        chanceTitan = 200
+        chanceIron = 40
 
-        for i in range(1, time + 1):
+        self.busy = 1
+
+        print(Fore.GREEN + f"\n\t{self.name} törp elindult {mimingTime} órát gürcölni a bányába." + Fore.RESET)
+        time.sleep(timeFast)
+
+        for i in range(1, mimingTime + 1):
             
             if self.level == 1:
                 miningLimit = 100
@@ -34,14 +46,14 @@ class Dwarf:
             qTitan = 0
             
             for j in range(1, int(miningLimit) + 1):
-                if random.randrange(1, titan) == 1:
+                if random.randrange(1, chanceTitan) == 1:
                     qTitan += 1
-                elif random.randrange(1, iron) == 1:
+                elif random.randrange(1, chanceIron) == 1:
                     qIron += 1
                 else:
                     qRock += 1
             
-            print(f"Az {i}. órában a kitermelt nyersanyagok:\n\t- Titán: {qTitan}\t- Vas: {qIron}\t- Kő: {qRock}")
+            #print(f"Az {i}. órában a kitermelt nyersanyagok:\n\t- Titán: {qTitan}\t- Vas: {qIron}\t- Kő: {qRock}")
             if self.leveling(miningXP):
                 capInd = 0
             
@@ -49,7 +61,10 @@ class Dwarf:
             sumIron += qIron
             sumTitan += qTitan
         
-        print(f"{self.name} {time} óra alatt kitermelt:\n\t{sumTitan} Titánt, {sumIron} Vasat és {sumRock} Követ")
+        mimingTime = mimingTime * 60
+        time.sleep(mimingTime-timeFast)
+        print(f"{self.name} törp befejezte a bányászást. {mimingTime/60} óra alatt kitermelt:\n\t{sumTitan} Titánt, {sumIron} Vasat és {sumRock} Követ")
+        self.busy = 0
         
 
     def crafting(self, item):
