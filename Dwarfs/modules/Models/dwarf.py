@@ -2,6 +2,9 @@ import random
 import time
 from colorama import Fore, Style
 from modules.Views import menu
+from modules.globals import GlobalVars
+
+globalV = GlobalVars()
 
 class Dwarf:
     def __init__(self, name):
@@ -13,10 +16,7 @@ class Dwarf:
         self.busy = 0
         self.remainingTurns = 0
 
-    def mining(self, mimingTime):
-
-        global timeSlow, timeMedium, timeFast
-
+    def mining(self, globalV, mimingTime):
         capInd = 0
         miningXP = 20
         sumRock = 0
@@ -28,7 +28,7 @@ class Dwarf:
         self.busy = 1
 
         print(Fore.GREEN + f"\n\t{self.name} törp elindult {mimingTime} órát gürcölni a bányába." + Fore.RESET)
-        time.sleep(timeFast)
+        time.sleep(globalV.timeMedium)
 
         for i in range(1, mimingTime + 1):
             
@@ -62,7 +62,7 @@ class Dwarf:
             sumTitan += qTitan
         
         mimingTime = mimingTime * 60
-        time.sleep(mimingTime-timeFast)
+        time.sleep(mimingTime-globalV.timeFast)
         print(f"{self.name} törp befejezte a bányászást. {mimingTime/60} óra alatt kitermelt:\n\t{sumTitan} Titánt, {sumIron} Vasat és {sumRock} Követ")
         self.busy = 0
         

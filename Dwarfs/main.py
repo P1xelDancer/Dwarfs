@@ -1,9 +1,7 @@
 from modules.Views import menu
-#from dwarf import Dwarf
-#from item import Item
-#import menu
+from modules.globals import GlobalVars
 
-
+globalV = GlobalVars()
 
 # Balin = Dwarf("Balin")
 # Dwalin = Dwarf("Dwalin")
@@ -17,4 +15,4 @@ from modules.Views import menu
 # Dwarf.hireDwarf("Balin")
 # print(f"Az első törp neve: {Dwarf.name}")
 
-menu.mainMenu()
+menu.mainMenu(globalV)
