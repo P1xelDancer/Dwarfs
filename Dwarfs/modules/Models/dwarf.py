@@ -13,8 +13,9 @@ class Dwarf:
         self.needXP = 100
         self.currentXP = 0
         self.nextLvlMultiplier = 1.2
-        self.busy = 0
-        self.remainingTurns = 0
+        self.busy = False
+        self.busyUntil = None
+        self.currentTask = None
 
     def mining(self, globalV, mimingTime):
         capInd = 0
@@ -24,6 +25,16 @@ class Dwarf:
         sumTitan = 0
         chanceTitan = 200
         chanceIron = 40
+
+        # # Csak ezeket állítani, hogy elinduljon a scheduler()-ben a szimulált idő
+        # self.busy = True
+        # self.busy_until = time.time() + 3600  # 1 óra szimulált idő
+        # self.current_task = 'mining'
+
+        # now = time.time()
+        # miningTime = 30
+        # dwarf.busy_until = now + miningTime
+
 
         self.busy = 1
 
@@ -83,3 +94,18 @@ class Dwarf:
         print(f"{self.name} az akciója után kapott {gainXP} XP-t, most {self.level}. szintű.")
         return lvlUp
     
+    # # Itt kell definiálni, hogy mi fusson le a scheduler() után
+    # def complete_task(dwarf):
+    #     if dwarf.current_task == 'mining':
+    #         print(f"{dwarf.name} befejezte a bányászatot.")
+    #         dwarf.state = 'idle'
+    #         dwarf.current_task = None
+    #         dwarf.busy_until = None
+    #         # itt adhatod hozzá az alapanyagokat, XP-t stb.
+
+    #     elif dwarf.current_task == 'crafting':
+    #         print(f"{dwarf.name} befejezte a craftingot.")
+    #         dwarf.state = 'idle'
+    #         dwarf.current_task = None
+    #         dwarf.busy_until = None
+    #         # itt adhatod hozzá a tárgyat az inventoryhoz
