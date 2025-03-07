@@ -2,7 +2,7 @@ from modules.Views import menu
 from modules.globals import GlobalVars
 from modules.Models import dwarf
 from colorama import Fore, Style
-import threading
+import threading, time
 
 globalV = GlobalVars()
 
@@ -18,14 +18,16 @@ globalV = GlobalVars()
 # Dwarf.hireDwarf("Balin")
 # print(f"Az első törp neve: {Dwarf.name}")
 
-def main(globalV):
-    createDwarfs(globalV)
-    # schedulerThread = threading.Thread(target=scheduler, args=(globalV,), daemon=True)
-    # schedulerThread.start()
+def main():
+    createDwarfs()
+    schedulerThread = threading.Thread(target=scheduler, daemon=True)
+    schedulerThread.start()
     menu.mainMenu(globalV)
 
-def createDwarfs(globalV):
-    while len(globalV.dwarf) <5:
+def createDwarfs():
+    playableDwarfsNumber = 2
+    globalV.timeSlow = 15
+    while len(globalV.dwarfs) < playableDwarfsNumber:
         name = input("\n\tKérek egy törp nevet: ")
         if name in globalV.dwarfs:
             print(Fore.RED + f"\n\tIlyen nevű törp ({name}) már létezik. Kérlek válassz másik nevet!" + Fore.RESET)
@@ -33,14 +35,36 @@ def createDwarfs(globalV):
         else:
             globalV.dwarfs[name] = dwarf.Dwarf(name)
             print(Fore.GREEN + f"\n\t{name} örül, hogy részt vehet a kalandban." + Fore.RESET)
+            print(globalV.dwarfs[name].busy, globalV.dwarfs[name].busyUntil)
+            print(globalV.timeSlow)
 
-# def scheduler(globalV):
-#     while True:
-#         now = time.time()
-#         for dwarf in globalV.dwarfs.values():
-#             if dwarf.busy_until and now >= dwarf.busy_until:
-#                 complete_task(dwarf)
-#         time.sleep(1)
+
+
+# Itt kell definiálni, hogy mi fusson le a scheduler() után:
+def completeTask(dwarf):
+    if dwarf.currentTask == "mining":
+        dwarf.mining(globalV)
+    #     print(f"{dwarf.name} befejezte a bányászatot.")
+    #     dwarf.state = 'idle'
+    #     dwarf.current_task = None
+    #     dwarf.busy_until = None
+    #     # itt adhatod hozzá az alapanyagokat, XP-t stb.
+
+    # elif dwarf.current_task == 'crafting':
+    #     print(f"{dwarf.name} befejezte a craftingot.")
+    #     dwarf.state = 'idle'
+    #     dwarf.current_task = None
+    #     dwarf.busy_until = None
+    #     # itt adhatod hozzá a tárgyat az inventoryhoz
+
+# # Időzítő:
+def scheduler():
+    while True:
+        now = time.time()
+        for dwarf in globalV.dwarfs.values():
+            if dwarf.busyUntil and now >= dwarf.busyUntil:
+                completeTask(dwarf)
+        time.sleep(2)
 
 # --------------------------------
 # Állapotmentés és visszatöltés:

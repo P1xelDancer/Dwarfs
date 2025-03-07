@@ -2,18 +2,12 @@ import msvcrt
 from colorama import Fore, Style
 import time
 import os
-from modules.Models import dwarf
-from modules.globals import GlobalVars
 import sys
-import threading
 
-#dwarfs = {}
-globalV = GlobalVars()
 
 def availableDwarfs(globalV):
     print("\n\tSzabad törpök listája:")
     availableDwarf = 0
-    #for value in dwarfs.values():
     for value in globalV.dwarfs.values():
         if not value.busy:
             print(f"Törp: {value.name} - Lvl: {value.level}")
@@ -22,11 +16,19 @@ def availableDwarfs(globalV):
         print("Nincs szabad törp.")
         time.sleep(globalV.timeMedium)
         os.system('cls')
-        mainMenu(globalV)
+        mainMenu()
+
+def printMessages(globalV):
+    for i in globalV.messages:
+        print(i)
+        time.sleep(globalV.timeFast)
 
 def mainMenu(globalV):
+    print(globalV.timeSlow)
+    for dwarf in globalV.dwarfs:
+        print(dwarf.busy, dwarf.busyUntil)
+    printMessages(globalV)
     print("""
-        Szia!
         Mit szeretnél csinálni?
           1.) IDEIGLENESEN NEM ELÉRHETŐ!
           2.) Bányászni küldeni az egyik törpöt
@@ -52,20 +54,20 @@ def mainMenu(globalV):
         #     hireDwarfMenu(globalV)
         case "2":
             sendToMiningMenu(globalV)
-        case "3":
-            sendToCraftingMenu(globalV)
+        # case "3":
+        #     sendToCraftingMenu()
         case "4":
-            if globalV.dwarfs:
+            if len(globalV.dwarfs) > 0:
                 #for value in dwarfs.values():
                 for value in globalV.dwarfs.values():
                     print(f"Törp: {value.name} - Lvl: {value.level}")
             else:
                 print("Nincsenek még felbérelt törpjeid.")
-            time.sleep(globalV.timeSlow)
+            time.sleep(globalV.timeMedium)
             os.system('cls')
             mainMenu(globalV)
-        case "5":
-            terminateDwarfMenu(globalV)
+        # case "5":
+        #     terminateDwarfMenu()
         case "0":
             sys.exit()
         # Nem megfelelő karakter leütése után tájékoztatás, majd a menü újratöltése.
@@ -73,7 +75,7 @@ def mainMenu(globalV):
             print(Fore.RED + "\n\tHibás bevitel..." + Fore.RESET)
             time.sleep(globalV.timeFast)
             os.system('cls')
-            mainMenu()
+            mainMenu(globalV)
 
 # def hireDwarfMenu(globalV):
 
@@ -129,14 +131,14 @@ def sendToMiningMenu(globalV):
     
     if name in globalV.dwarfs:
         while True:
-            miningTime = input(f"\n\tMeddig bányásszon {name} törp (1-12 óra)?: ")
+            miningHour = input(f"\n\tMeddig bányásszon {name} törp (1-12 óra)?: ")
             
-            if miningTime.isdigit() and (1 <= int(miningTime) <= 12):
-                miningTime = int(miningTime)
-                miningThread = threading.Thread(target=globalV.dwarfs[name].mining, args=(globalV, miningTime))
-                miningThread.start()
+            if miningHour.isdigit() and (1 <= int(miningHour) <= 12):
+                miningHour = int(miningHour)
+                globalV.dwarfs[name].miningBeginCheck(globalV, miningHour)
+                time.sleep(globalV.timeFast)
                 print("\n\tVisszalépés a főmenübe.")
-                time.sleep(globalV.timeMedium)
+                time.sleep(globalV.timeFast)
                 os.system('cls')
                 mainMenu(globalV)
             else:
@@ -149,59 +151,59 @@ def sendToMiningMenu(globalV):
         os.system('cls')
         sendToMiningMenu(globalV)
 
-def sendToCraftingMenu(globalV):
-    availableDwarfs(globalV)
-    name = input("\n\tKit szeretnél megbízni a gyártással?: ")
+# def sendToCraftingMenu():
+#     availableDwarfs()
+#     name = input("\n\tKit szeretnél megbízni a gyártással?: ")
     
-    if name in globalV.dwarfs:
-        while True:
-            craftingTime = input(f"\n\tMeddig gyártson {name} törp (1-12 óra)?: ")
+#     if name in globalV.dwarfs:
+#         while True:
+#             craftingTime = input(f"\n\tMeddig gyártson {name} törp (1-12 óra)?: ")
 
-            if craftingTime.isdigit() and (1 <= int(craftingTime) <= 12):
-                craftingTime = int(craftingTime)
-                craftingThread = threading.Thread(target=crafting, args=(globalV, name, craftingTime))
-                craftingThread.start()
-                print("\n\tVisszalépés a főmenübe.")
-                time.sleep(globalV.timeMedium)
-                os.system('cls')
-                mainMenu(globalV)
-            else:
-                print(Fore.RED + f"\n\tCsak 1 és 12 óra közötti intervallumot adhatsz meg!" + Fore.RESET)
-    else:
-        print(Fore.RED + f"\n\tNincs ilyen nevű törp a csapatodban... Még a nevüket sem tudod megjegyezni? ")
-        time.sleep(globalV.timeFast)
-        print("\n\tNa szedd össze magad és döntsd el, hogy kit akarsz dolgoztatni!." + Fore.RESET)
-        time.sleep(globalV.timeMedium)
-        os.system('cls')
-        sendToCraftingMenu(globalV)
+#             if craftingTime.isdigit() and (1 <= int(craftingTime) <= 12):
+#                 craftingTime = int(craftingTime)
+#                 craftingThread = threading.Thread(target=crafting, args=(name, craftingTime))
+#                 craftingThread.start()
+#                 print("\n\tVisszalépés a főmenübe.")
+#                 time.sleep(globalV.timeMedium)
+#                 os.system('cls')
+#                 mainMenu()
+#             else:
+#                 print(Fore.RED + f"\n\tCsak 1 és 12 óra közötti intervallumot adhatsz meg!" + Fore.RESET)
+#     else:
+#         print(Fore.RED + f"\n\tNincs ilyen nevű törp a csapatodban... Még a nevüket sem tudod megjegyezni? ")
+#         time.sleep(globalV.timeFast)
+#         print("\n\tNa szedd össze magad és döntsd el, hogy kit akarsz dolgoztatni!." + Fore.RESET)
+#         time.sleep(globalV.timeMedium)
+#         os.system('cls')
+#         sendToCraftingMenu()
 
-def terminateDwarfMenu(globalV):
-    print("\n\tA felbérelt törpök listája:")
+# def terminateDwarfMenu():
+#     print("\n\tA felbérelt törpök listája:")
     
-    for value in globalV.dwarfs.values():
-        print(f"Törp: {value.name} - Lvl: {value.level}")
-    name = input("\n\tKit küldesz el?: ")
+#     for value in globalV.dwarfs.values():
+#         print(f"Törp: {value.name} - Lvl: {value.level}")
+#     name = input("\n\tKit küldesz el?: ")
     
-    if name in globalV.dwarfs:
-        del globalV.dwarfs[name]
-        print(Fore.GREEN + f"\n\tSikeresen megszabadultál a ({name}) nevű törptől... Gratulálok Te szívtelen dög!" + Fore.RESET)
-        time.sleep(globalV.timeFast)
-        print("\n\tRemélem mást nem akarsz elküldeni... Visszalépés a főmenübe.")
-        time.sleep(globalV.timeMedium)
-        os.system('cls')
-        mainMenu(globalV)
-    else:
-        print(Fore.RED + f"\n\tNincs ilyen nevű törp a csapatodban... Még a nevüket sem tudod megjegyezni? ")
-        time.sleep(globalV.timeMedium)
-        print("\n\tNa menj és inkább csinálj valami értelmeset... Visszalépés a főmenübe." + Fore.RESET)
-        time.sleep(globalV.timeSlow)
-        os.system('cls')
-        mainMenu(globalV)
+#     if name in globalV.dwarfs:
+#         del globalV.dwarfs[name]
+#         print(Fore.GREEN + f"\n\tSikeresen megszabadultál a ({name}) nevű törptől... Gratulálok Te szívtelen dög!" + Fore.RESET)
+#         time.sleep(globalV.timeFast)
+#         print("\n\tRemélem mást nem akarsz elküldeni... Visszalépés a főmenübe.")
+#         time.sleep(globalV.timeMedium)
+#         os.system('cls')
+#         mainMenu()
+#     else:
+#         print(Fore.RED + f"\n\tNincs ilyen nevű törp a csapatodban... Még a nevüket sem tudod megjegyezni? ")
+#         time.sleep(globalV.timeMedium)
+#         print("\n\tNa menj és inkább csinálj valami értelmeset... Visszalépés a főmenübe." + Fore.RESET)
+#         time.sleep(globalV.timeSlow)
+#         os.system('cls')
+#         mainMenu()
 
-def crafting(globalV, name, craftTime):
-    globalV.dwarfs[name].busy = 1
-    print(f"{name} törp {craftTime} órán keresztül fog gyártani. (A játékban 1 óra a valóságban 2 percnek felel meg.)")
-    craftTime = craftTime * 10
-    time.sleep(craftTime)
-    globalV.dwarfs[name].busy = 0
-    print(f"{name} törp végzett a gyártással.")
+# def crafting(name, craftTime):
+#     globalV.dwarfs[name].busy = 1
+#     print(f"{name} törp {craftTime} órán keresztül fog gyártani. (A játékban 1 óra a valóságban 2 percnek felel meg.)")
+#     craftTime = craftTime * 10
+#     time.sleep(craftTime)
+#     globalV.dwarfs[name].busy = 0
+#     print(f"{name} törp végzett a gyártással.")
