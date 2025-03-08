@@ -25,7 +25,7 @@ def main():
     menu.mainMenu(globalV)
 
 def createDwarfs():
-    playableDwarfsNumber = 2
+    playableDwarfsNumber = 3
     globalV.timeSlow = 15
     while len(globalV.dwarfs) < playableDwarfsNumber:
         name = input("\n\tKérek egy törp nevet: ")
@@ -35,8 +35,8 @@ def createDwarfs():
         else:
             globalV.dwarfs[name] = dwarf.Dwarf(name)
             print(Fore.GREEN + f"\n\t{name} örül, hogy részt vehet a kalandban." + Fore.RESET)
-            print(globalV.dwarfs[name].busy, globalV.dwarfs[name].busyUntil)
-            print(globalV.timeSlow)
+            # print(globalV.dwarfs[name].busy, globalV.dwarfs[name].busyUntil)
+            # print(globalV.timeSlow)
 
 
 

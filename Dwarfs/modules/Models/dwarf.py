@@ -15,12 +15,13 @@ class Dwarf:
         self.currentTask = None
         self.miningLimit = 100
         self.eventMessage = ""
+        self.eventTime = 0
 
-    def miningBeginCheck(self, globalV, miningHour):
+    def miningBeginCheck(self, globalV):
         # - felszerelés ellenőrzés
-        print(Fore.GREEN + f"\n\t{self.name} törp elindult {miningHour} órát gürcölni a bányába." + Fore.RESET)
+        print(Fore.GREEN + f"\n\t{self.name} törp elindult {self.eventTime} órát gürcölni a bányába." + Fore.RESET)
         self.busy = True
-        realTime = miningHour * globalV.realTimeMultiplier
+        realTime = self.eventTime * globalV.realTimeMultiplier
         self.busyUntil = time.time() + realTime
         self.currentTask = "mining"
         
@@ -32,13 +33,15 @@ class Dwarf:
         self.busyUntil = time.time() + realTime
         self.currentTask = "crafting"
     
-    def mining(self, globalV, miningHour):
+    def mining(self, globalV):
         miningXP = 20
         sumRock = 0
         sumIron = 0
         sumTitan = 0
-        chanceTitan = 200
-        chanceIron = 40
+        sumMythrill = 0
+        chanceIron = 30
+        chanceTitan = 300
+        chanceMythrill = 1000
 
         # # Csak ezeket állítani, hogy elinduljon a scheduler()-ben a szimulált idő
         # self.busy = True
@@ -51,7 +54,7 @@ class Dwarf:
         
         time.sleep(globalV.timeMedium)
 
-        for i in range(1, miningHour + 1):
+        for i in range(1, self.eventTime + 1):
             
             # if self.level == 1:
             #     miningLimit = 100
@@ -65,25 +68,35 @@ class Dwarf:
             qRock = 0
             qIron = 0
             qTitan = 0
+            qMythrill = 0
             
             for j in range(1, int(self.miningLimit) + 1):
-                if random.randrange(1, chanceTitan) == 1:
+                if random.randrange(1, chanceMythrill) == 1:
+                    qMythrill += 1
+                elif random.randrange(1, chanceTitan) == 1:
                     qTitan += 1
                 elif random.randrange(1, chanceIron) == 1:
                     qIron += 1
                 else:
                     qRock += 1
             
-            #print(f"Az {i}. órában a kitermelt nyersanyagok:\n\t- Titán: {qTitan}\t- Vas: {qIron}\t- Kő: {qRock}")
             if self.leveling(globalV, miningXP):
-                self.eventMessage = f"{self.name} törp az {i}. óra után szintet lépett, ezért a hátralevő időben már {self.miningLimit} egységnyi ércet tudott kibányászni."
+                self.eventMessage = f"\n\t{self.name} törp az {i}. óra után szintet lépett, ezért a hátralevő időben már {self.miningLimit} egységnyi ércet tudott kibányászni.\n"
                 globalV.messages.append(self.eventMessage)
             
             sumRock += qRock
             sumIron += qIron
             sumTitan += qTitan
+            sumMythrill += qMythrill
+
+        globalV.globalRock += sumRock
+        globalV.globalIron += sumIron
+        globalV.globalTitan += sumTitan
+        globalV.globalMythrill += sumMythrill
     
-        self.eventMessage = f"{self.name} törp befejezte a bányászást. {miningHour} óra alatt kitermelt:\n\t{sumTitan} Titánt, {sumIron} Vasat és {sumRock} Követ"
+        self.eventMessage = f"\n\t{self.name} törp befejezte a bányászást. {self.eventTime} óra alatt kitermelt:\n\t\t{sumMythrill} Mythrillércet, {sumTitan} Titánércet, {sumIron} Vasércet és {sumRock} Követ"
+        globalV.messages.append(self.eventMessage)
+        self.eventMessage = f"\n\tA törp tábor összes nyersanyaga:\n\t\t{globalV.globalMythrill} Mythrillérc, {globalV.globalTitan} Titánérc, {globalV.globalIron} Vasérc, {globalV.globalRock} Kő\n"
         globalV.messages.append(self.eventMessage)
         self.busy = 0
         self.busyUntil = None

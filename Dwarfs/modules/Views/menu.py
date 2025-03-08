@@ -22,11 +22,12 @@ def printMessages(globalV):
     for i in globalV.messages:
         print(i)
         time.sleep(globalV.timeFast)
+    globalV.messages = []
 
 def mainMenu(globalV):
-    print(globalV.timeSlow)
-    for dwarf in globalV.dwarfs:
-        print(dwarf.busy, dwarf.busyUntil)
+    # print(globalV.timeSlow)
+    # for d in globalV.dwarfs.values():
+    #     print(d.busy, d.busyUntil)
     printMessages(globalV)
     print("""
         Mit szeretnél csinálni?
@@ -131,11 +132,11 @@ def sendToMiningMenu(globalV):
     
     if name in globalV.dwarfs:
         while True:
-            miningHour = input(f"\n\tMeddig bányásszon {name} törp (1-12 óra)?: ")
+            miningHour = input(f"\n\tMeddig bányásszon {name} törp (1-16 óra)?: ")
             
-            if miningHour.isdigit() and (1 <= int(miningHour) <= 12):
-                miningHour = int(miningHour)
-                globalV.dwarfs[name].miningBeginCheck(globalV, miningHour)
+            if miningHour.isdigit() and (1 <= int(miningHour) <= 16):
+                globalV.dwarfs[name].eventTime = int(miningHour)
+                globalV.dwarfs[name].miningBeginCheck(globalV)
                 time.sleep(globalV.timeFast)
                 print("\n\tVisszalépés a főmenübe.")
                 time.sleep(globalV.timeFast)

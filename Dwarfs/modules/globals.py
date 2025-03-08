@@ -9,3 +9,4 @@ class GlobalVars:
         self.globalRock = 0
         self.globalIron = 0
         self.globalTitan = 0
+        self.globalMythrill = 0
