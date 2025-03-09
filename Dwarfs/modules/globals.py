@@ -10,3 +10,4 @@ class GlobalVars:
         self.globalIron = 0
         self.globalTitan = 0
         self.globalMythrill = 0
+        self.miningLimitMultiplier = 1.2

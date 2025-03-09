@@ -7,13 +7,14 @@ class Dwarf:
     def __init__(self, name):
         self.level = 1
         self.name = name
-        self.needXP = 100
+        self.needXP = 120
         self.currentXP = 0
-        self.nextLvlMultiplier = 1.2
+        self.sumXP = 0
+        self.nextLvlMultiplier = 1.3
         self.busy = False
         self.busyUntil = None
         self.currentTask = None
-        self.miningLimit = 100
+        self.miningLimit = 60
         self.eventMessage = ""
         self.eventTime = 0
 
@@ -34,7 +35,7 @@ class Dwarf:
         self.currentTask = "crafting"
     
     def mining(self, globalV):
-        miningXP = 20
+        miningXP = 30
         sumRock = 0
         sumIron = 0
         sumTitan = 0
@@ -80,9 +81,12 @@ class Dwarf:
                 else:
                     qRock += 1
             
+            self.sumXP += miningXP
+            
             if self.leveling(globalV, miningXP):
-                self.eventMessage = f"\n\t{self.name} törp az {i}. óra után szintet lépett, ezért a hátralevő időben már {self.miningLimit} egységnyi ércet tudott kibányászni.\n"
+                self.eventMessage = f"\n\t{self.name} törp az eddigi munkájának köszönhetően {self.sumXP} XP-t gyűjtött és a(z) {i}. óra után szintet lépett,\n\tezért innentől kezdve már óránként {self.miningLimit} egységnyi ércet tud kibányászni.\n"
                 globalV.messages.append(self.eventMessage)
+                self.sumXP = 0
             
             sumRock += qRock
             sumIron += qIron
@@ -96,6 +100,9 @@ class Dwarf:
     
         self.eventMessage = f"\n\t{self.name} törp befejezte a bányászást. {self.eventTime} óra alatt kitermelt:\n\t\t{sumMythrill} Mythrillércet, {sumTitan} Titánércet, {sumIron} Vasércet és {sumRock} Követ"
         globalV.messages.append(self.eventMessage)
+        self.eventMessage = f"\n\tA kemény munkája után, az előző szintlépése óta kapott {self.sumXP} XP-t, most {self.level}. szintű."
+        globalV.messages.append(self.eventMessage)
+        self.sumXP = 0
         self.eventMessage = f"\n\tA törp tábor összes nyersanyaga:\n\t\t{globalV.globalMythrill} Mythrillérc, {globalV.globalTitan} Titánérc, {globalV.globalIron} Vasérc, {globalV.globalRock} Kő\n"
         globalV.messages.append(self.eventMessage)
         self.busy = 0
@@ -112,12 +119,10 @@ class Dwarf:
         self.currentXP += gainXP
         while (self.currentXP >= self.needXP):
             self.currentXP -= self.needXP
-            self.needXP = self.needXP * self.nextLvlMultiplier
+            self.needXP += round(self.needXP * self.nextLvlMultiplier)
             self.level += 1
-            self.miningLimit = 100 + 100 * ((20 * (self.level - 1)) / 100)
+            self.miningLimit = round(self.miningLimit * globalV.miningLimitMultiplier)
             lvlUp = True
-        self.eventMessage = f"{self.name} az akciója után kapott {gainXP} XP-t, most {self.level}. szintű."
-        globalV.messages.append(self.eventMessage)
         return lvlUp
     
     
