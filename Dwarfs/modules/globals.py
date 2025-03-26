@@ -1,3 +1,6 @@
+from modules.Services.resourceManager import ResourceManager
+from modules.Services.mining import Mining
+
 class GlobalVars:
     def __init__(self):
         self.timeSlow = 6
@@ -6,8 +9,6 @@ class GlobalVars:
         self.realTimeMultiplier = 5
         self.dwarfs = {}
         self.messages = []
-        self.globalRock = 0
-        self.globalIron = 0
-        self.globalTitan = 0
-        self.globalMythrill = 0
+        self.resources = ResourceManager()
+        self.mining = Mining(self.resources)
         self.miningLimitMultiplier = 1.2
