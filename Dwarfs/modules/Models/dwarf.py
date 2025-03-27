@@ -115,34 +115,34 @@ class Dwarf:
     #     self.busyUntil = None
 
     def mining(self, globalV):
-        time.sleep(globalV.timeMedium)
+        #time.sleep(globalV.timeMedium)
         
-        total_mined_resources = {}
-        total_xp = 0
+        totalMinedResources = {}
+        totalXp = 0
         
         # Minden órára külön bányászunk
         for i in range(1, self.eventTime + 1):
             # Az aktuális mining limit alapján bányászunk
-            hour_results = globalV.mining_system.mine(self.miningLimit)
+            hourResults = globalV.mining.mine(self.miningLimit)
             
             # Összesítjük az eredményeket
-            for resource_id, amount in hour_results.items():
-                total_mined_resources[resource_id] = total_mined_resources.get(resource_id, 0) + amount
+            for resourceId, amount in hourResults.items():
+                totalMinedResources[resourceId] = totalMinedResources.get(resourceId, 0) + amount
             
             # XP számítás erre az órára
-            hour_xp = globalV.mining_system.mining_reward_xp(1, hour_results)
-            total_xp += hour_xp
-            self.sumXP += hour_xp
+            hourXp = globalV.mining.miningReward_xp(1, hourResults)
+            totalXp += hourXp
+            self.sumXP += hourXp
             
             # Ellenőrizzük a szintlépést minden óra után
-            if self.leveling(globalV, hour_xp):
+            if self.leveling(globalV, hourXp):
                 self.eventMessage = f"\n\t{self.name} törp az eddigi munkájának köszönhetően {self.sumXP} XP-t gyűjtött és a(z) {i}. óra után szintet lépett,\n\tezért innentől kezdve már óránként {self.miningLimit} egységnyi ércet tud kibányászni.\n"
                 globalV.messages.append(self.eventMessage)
                 self.sumXP = 0
         
         # Eredmények feldolgozása és üzenet generálása
-        result_message = globalV.mining_system.process_mining_results(self, self.eventTime, total_mined_resources)
-        globalV.messages.append(result_message)
+        resultMessage = globalV.mining.processMiningResults(self, self.eventTime, totalMinedResources)
+        globalV.messages.append(resultMessage)
         
         # XP üzenet
         self.eventMessage = f"\n\tA kemény munkája után, az előző szintlépése óta kapott {self.sumXP} XP-t, most {self.level}. szintű."
@@ -150,11 +150,11 @@ class Dwarf:
         self.sumXP = 0
         
         # Nyersanyag készlet összesítés
-        resources_summary = "\n\tA törp tábor összes nyersanyaga:"
-        for resource_id, resource in globalV.resources.resource_types.items():
-            amount = globalV.resources.get_resource_amount(resource_id)
-            resources_summary += f"\n\t\t{amount} {resource.name}"
-        globalV.messages.append(resources_summary + "\n")
+        resourcesSummary = "\n\tA törp tábor összes nyersanyaga:"
+        for resourceId, resource in globalV.resources.resourceTypes.items():
+            amount = globalV.resources.get_resourceAmount(resourceId)
+            resourcesSummary += f"\n\t\t{amount} {resource.name}"
+        globalV.messages.append(resourcesSummary + "\n")
         
         # Törp felszabadítása
         self.busy = False
