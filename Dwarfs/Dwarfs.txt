@@ -44,3 +44,5 @@ Törp(ök) bányászik, kovácsol, eladja a termékeit
 	- Minél nagyobb a szint, annál értékesebb anyagokat lehet találni
 	- Játékcél: találni a legértékesebb anyaghoz lelőhelyet
 - Időnként támadás a tábor ellen
+- A bányában a mélységgel nő a beomlás veszélye is, de a köveket fel lehet használni a bánya kikövezésére
+	- Építés is egy képesség lesz

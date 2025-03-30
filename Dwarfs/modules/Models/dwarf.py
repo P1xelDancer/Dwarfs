@@ -115,7 +115,6 @@ class Dwarf:
     #     self.busyUntil = None
 
     def mining(self, globalV):
-        #time.sleep(globalV.timeMedium)
         
         totalMinedResources = {}
         totalXp = 0

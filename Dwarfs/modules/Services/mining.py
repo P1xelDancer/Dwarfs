@@ -30,11 +30,11 @@ class Mining:
                 # (pl. 1/1000 * 1000 = 1, tehát 0.1% esély)
                 if roll <= 1000 / resource.rarity:
                     results[resourceId] = results.get(resourceId, 0) + 1
-                    resource_found = True
+                    resourceFound = True
                     break
             
             # Ha semmit nem találtunk, akkor az alapértelmezett nyersanyagot adjuk (kő)
-            if not resource_found:
+            if not resourceFound:
                 results['rock'] = results.get('rock', 0) + 1
         
         return results
