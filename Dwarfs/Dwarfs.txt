@@ -46,3 +46,21 @@ Törp(ök) bányászik, kovácsol, eladja a termékeit
 - Időnként támadás a tábor ellen
 - A bányában a mélységgel nő a beomlás veszélye is, de a köveket fel lehet használni a bánya kikövezésére
 	- Építés is egy képesség lesz
+
+Bánya:
+- Tárnarendszer
+- Egyre mélyebben egyre több tárna nyitható (változó, random számú, 1. szinten még fix 2, ezekből 2-3, azokból 3-5...)
+- Egy tárnának előre fixált nyersanyag tartalma van (össz nyersanyag és külön-külön is, tehát egy idő után mondjuk nincs több Mythrill)
+- A hegy egészének is van egy össz nyersanyag tartalma ami a kategóriájától függ
+- A tárnáknak szintenként van egy összesített struktúrális stabilitása ami az összesített nyersanyagkitermelés emelkedésével csökken
+- A stabilitást tartóelemek építésével lehet növelni
+- Új mélység szinten az új tárna nyitásához egy elágazódás termet kell építeni
+- Az építést is időre lehet végezni és aztán kiderül, hogy meddig jutott a törp
+- A különböző mélységekbe a 2. szinttől kezdve szintenként 1 órát vesz igénybe a lejutás
+- Elágazódás terem létrehozható már eleve táborhelynek vagy később felfejleszthető
+- Lehetőség van az elágazódások összekötésére, mert a tábor eredetileg csak az egy tárnafán belül érhető el
+- Van rá esély, hogy egy tárnán belül bányászás közben teremre bukkannak a törpök ami lehet több szintű is. Egyre mélyebben egyre nagyobb szintű termekre lehet bukkanni
+- Tárnafánként változó a nyersanyagok eloszlása és erre lehet megérzése a törpöknek a bányászás fejlődésével. Akár kezdeményezhetik új tárna nyitását is a megfelelő nyersanyag megtalálásának érdekében.
+- Liftrendszer is építhető ami mondjuk felére csökkenti a szintek közötti közlekedési időt, de ezt tárnánként ki kell építeni
+- Minél mélyebben vagyunk, annál könnyebben csökken a szint stabilitása (Pl.: 1. szinten 1% 500 egységenként, 10. szinten 1% 50 egységenként)
+- Beomlás esetén: TODO
