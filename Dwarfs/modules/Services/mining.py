@@ -74,11 +74,12 @@ class Mining:
         """
         baseXp = 30 * miningHours  # Alapvető XP óránként
         
-        # Bónusz XP a ritkább nyersanyagokért
-        bonusXp = 0
-        for resourceId, amount in miningResults.items():
-            resource = self.resourceManager.resourceTypes[resourceId]
-            # A ritkább nyersanyagok több bónusz XP-t adnak
-            bonusXp += amount * (resource.rarity / 30)
+        # # Bónusz XP a ritkább nyersanyagokért
+        # bonusXp = 0
+        # for resourceId, amount in miningResults.items():
+        #     resource = self.resourceManager.resourceTypes[resourceId]
+        #     # A ritkább nyersanyagok több bónusz XP-t adnak
+        #     bonusXp += amount * (resource.rarity / 30)
         
-        return baseXp + int(bonusXp)
+        # return baseXp + int(bonusXp)
+        return baseXp
